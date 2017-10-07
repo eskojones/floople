@@ -1,0 +1,8 @@
+{
+  "session": {
+    "domain": "localhost",
+    "proxy": true,
+    "secureCookie": true
+  },
+  "logFormat": "[:date[iso]] :remote-addr - :req[user] \":method :url HTTP/:http-version\" :status :res[content-length] \":referrer\" \":user-agent\""
+}
