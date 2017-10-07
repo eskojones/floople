@@ -21,7 +21,7 @@ let dbAdaptor = {
 };
 
 const select = (req, res) => {
-    return dbService.select(dbAdaptor.select(req), { username: 'guest' })
+    return dbService.select(dbAdaptor.select(req), { username: 'admin' })
     .then( (rows) => {
         res.status(200).json(rows).end();
     });

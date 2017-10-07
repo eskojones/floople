@@ -3,7 +3,7 @@
 let Q = require('q');
 
 
-const func = (method, req, res) => {
+const func = (req, res) => {
     return Q.fcall(() => {
         res.status(200).json(req.params).end();
     });
