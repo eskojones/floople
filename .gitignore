@@ -1,0 +1,11 @@
+logs
+*.log
+pids
+*.pid
+node_modules
+npm-debug.log
+.DS_Store
+.idea/
+frontend/public/javascript
+.babel-cache
+frontend/public/stylesheets/style.css
