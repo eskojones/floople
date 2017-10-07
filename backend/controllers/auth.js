@@ -3,7 +3,7 @@
 let Q = require('q');
 
 
-const func = (method, req, res) => {
+const login = (req, res) => {
     return Q.fcall(() => {
         res.status(200).json(req.params).end();
     });
@@ -11,5 +11,5 @@ const func = (method, req, res) => {
 
 
 module.exports = {
-    func: func
+    login: login
 };

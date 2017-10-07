@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "user",
-    "password": "pass",
-    "database": "db",
+    "password": "p4ssword!",
+    "database": "floople",
     "host": "127.0.0.1",
     "dialect": "postgresql",
     "logging": false,
@@ -10,8 +10,8 @@
   },
   "staging": {
     "username": "user",
-    "password": "pass",
-    "database": "db",
+    "password": "p4ssword!",
+    "database": "floople",
     "host": "127.0.0.1",
     "dialect": "postgresql",
     "logging": false,
@@ -19,8 +19,8 @@
   },
   "production": {
     "username": "user",
-    "password": "pass",
-    "database": "db",
+    "password": "p4ssword!",
+    "database": "floople",
     "host": "127.0.0.1",
     "dialect": "postgresql",
     "logging": false,

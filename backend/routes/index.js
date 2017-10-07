@@ -4,14 +4,13 @@ let express = require('express'),
     router = express.Router(),
     _ = require('lodash'),
     controllers = {
-        test: require('../controllers/test.js')
+        test: require('../controllers/test.js'),
+        db: require('../controllers/db.js')
     };
 
-router.get('/', function (req, res) {
-    res.render('index', {title: 'Main'});
-});
 
-router.get('/api/:controller/:function*', [], (req, res) => {
+
+let apiRequestHandler = (req, res) => {
     let ctlName = req.params.controller;
     let ctlFunction = req.params.function;
     if (_.isNil(controllers[ctlName]) || !_.isFunction(controllers[ctlName][ctlFunction])) {
@@ -32,6 +31,16 @@ router.get('/api/:controller/:function*', [], (req, res) => {
 
     req.params = Object.assign({}, req.params, { query: query });
     return controllers[ctlName][ctlFunction](req, res);
+};
+
+
+router.get('/', function (req, res) {
+    res.render('index', {title: 'Main'});
 });
+
+router.get('/api/:controller/:function*', [], apiRequestHandler);
+router.put('/api/:controller/:function*', [], apiRequestHandler);
+router.post('/api/:controller/:function*', [], apiRequestHandler);
+router.delete('/api/:controller/:function*', [], apiRequestHandler);
 
 module.exports = router;

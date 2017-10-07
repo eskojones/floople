@@ -1,6 +1,6 @@
 'use strict';
 
-//require('../../config/passport');
+require('../config/passport.js');
 
 const db = require('./config/db.js'),
       routes = require('./routes/index.js'),
@@ -14,15 +14,15 @@ const db = require('./config/db.js'),
       helmet = require('helmet'),
       sassMiddleware = require('node-sass-middleware'),
       session = require('express-session'),
-//      passport = require('passport'),
+      passport = require('passport'),
       neat = require('node-neat'),
       app = express(),
       compress = require('compression'),
-      //SequelizeSessionStore = require('connect-session-sequelize')(session.Store),
-      //sessionStore = new SequelizeSessionStore({db: db}),
+      SequelizeSessionStore = require('connect-session-sequelize')(session.Store),
+      sessionStore = new SequelizeSessionStore({ db: db }),
       ejs = require('ejs');
 
-//sessionStore.sync();
+sessionStore.sync();
 app.use(compress());
 app.set('views', path.join(__dirname, '../frontend/views'));
 app.engine('html', ejs.renderFile);
@@ -33,16 +33,16 @@ app.use(logger(config.logFormat));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressSanitized());
-//app.use(session({
-//    secret: config.session.secret,
-//    store: sessionStore,
-//    proxy: config.session.proxy,
-//    resave: false,
-//    saveUninitialized: false,
-//    cookie: { domain: config.session.domain, secure: config.session.secureCookie }
-//}));
-//app.use(passport.initialize());
-//app.use(passport.session());
+app.use(session({
+    secret: config.session.secret,
+    store: sessionStore,
+    proxy: config.session.proxy,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { domain: config.session.domain, secure: config.session.secureCookie }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(sassMiddleware({
     src: path.join(__dirname, '../frontend/public'),
     dest: path.join(__dirname, '../frontend/public'),

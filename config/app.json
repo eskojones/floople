@@ -1,5 +1,6 @@
 {
   "session": {
+    "secret": "this-is-a-secret",
     "domain": "localhost",
     "proxy": true,
     "secureCookie": true
