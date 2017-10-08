@@ -5,7 +5,7 @@ import DataCard from './DataCard.jsx';
 
 const appStyle = {
     width: 800,
-    height: 600,
+    //height: 600,
     padding: 10,
     overflow: 'none',
     fontFamily: 'source code pro, courier',
@@ -42,11 +42,7 @@ class App extends Component {
         console.log(this.state.rows);
 
         let mapUsers = this.state.rows.map( (user, idx) => {
-            let position = {
-                //x: 0,
-                //y: 0 + (idx * 100)
-            };
-            return <DataCard data={user} key={user.id}_card position={position} format={(k,v) => `${k}: ${v}`} />;
+            return <DataCard data={user} key={user.id}_card format={(k,v) => `${k}: ${v}`} />;
         });
 
         return (
