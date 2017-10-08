@@ -54,15 +54,12 @@ app.use(sassMiddleware({
 app.use('/', routes);
 
 app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    res.status(404).end('Not Found');
+    next();
 });
 
 app.use((error, req, res, next) => {
     require('./lib/logger.js').warn('[general-error]', {error: error.stack});
-    //res.status(error.status || 500);
-    //res.render('error');
     next(error);
 });
 

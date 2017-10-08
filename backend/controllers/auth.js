@@ -1,14 +1,44 @@
 'use strict';
 
-let Q = require('q');
-
+let Q = require('q'),
+    passport = require('passport');
 
 const login = (req, res) => {
-    return Q.fcall(() => {
-        res.status(200).json(req.params).end();
-    });
-};
+    if (req.method !== 'PUT') {
+        return Q.fcall(() => { 
+            console.log('authService.login: Invalid HTTP method.');
+            res.redirect('/login');
+        });
+    }
 
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            res.status(200).json(user).end();
+            return;
+        }
+
+        if (!user) {
+            res.status(200).json(user).end();
+            return;
+        }
+
+        req.logIn(user, function (err) {
+            if (err) {
+                res.status(200).json(user).end();
+                return;
+            }
+
+            res.req.authenticated = true;
+
+            console.log(req.isAuthenticated());
+
+            req.session.save(() => {
+                console.log(req.session);
+                res.status(200).json(user).end();
+            });
+        });
+    })(req, res);
+};
 
 module.exports = {
     login: login

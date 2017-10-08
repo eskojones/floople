@@ -34,23 +34,39 @@ const restrict = (query, rows, auth) => {
 };
 
 const select = (query, auth) => {
+    if (!_.isObject(auth)) {
+        auth = {
+            username: ''
+        };
+    }
+
     let table = tables[query.table];
     //fail silently on invalid table to prevent information disclosure to attackers
     if (_.isNil(table)) {
         return Q.fcall(() => { return []; });
     }
-    let attributes = _.union(table.attributes, query.attributes);
 
-    return table.model.findAll({
-        attributes: attributes,
+    let attributes = _.union(table.attributes, 
+                             _.isNil(query.attributes) || query.attributes.length == 0 
+                                ? Object.keys(table.model.rawAttributes)
+                                : query.attributes
+                            );
+
+    query.attributes = attributes;
+
+    let findObject = {
         order: query.order,
-        where: query.where
-    })
+        where: query.where,
+        attributes: attributes
+    };
+
+    return table.model.findAll(findObject)
     .then( (rows) => {
         if (_.isNil(rows)) {
             return Q.fcall(() => { return []; });
         }
-
+        
+        //apply access restrictions to the returned rows
         return restrict(query, rows, auth);
     })
     .catch( (error) => {

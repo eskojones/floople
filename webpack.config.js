@@ -3,7 +3,10 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        main:'./frontend/components/App.jsx',
+        site:'./frontend/components/Site.jsx',
+        app:'./frontend/components/App.jsx',
+        login: './frontend/components/Login.jsx',
+        signup: './frontend/components/Signup.jsx'
     },
     output: {
         path: path.resolve(__dirname, 'frontend/public/javascript'),

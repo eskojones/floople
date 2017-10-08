@@ -28,6 +28,11 @@ class App extends Component {
             model: 'users', 
             attributes: ['id','username','password','type'], 
             order:['id','desc'],
+            where: {
+                username: {
+                    $regexp: '^(adm|gue).*$' //$regexp pg/mysql only
+                }
+            }
         })
         .then( (rows) => {
             this.setState({ rows: rows });
