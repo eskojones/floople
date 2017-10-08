@@ -13,7 +13,7 @@ const handleResponseError = function(error) {
 };
 
 const select = ({ model='', attributes=[], order=[], where={} } = { }) => {
-    if (_.isString(model) || model.length == '' || !_.isArray(attributes) || attributes.length == 0) {
+    if (!_.isString(model) || model.length == '' || !_.isArray(attributes) || attributes.length == 0) {
         return Q.fcall( () => { return []; });
     }
 
