@@ -40,6 +40,7 @@ let renderApp = (req, res) => {
         res.redirect('/login');
         return;
     }
+
     res.render('app', { title: 'App' });
 };
 

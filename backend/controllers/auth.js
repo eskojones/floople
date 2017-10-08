@@ -30,10 +30,7 @@ const login = (req, res) => {
 
             res.req.authenticated = true;
 
-            console.log(req.isAuthenticated());
-
             req.session.save(() => {
-                console.log(req.session);
                 res.status(200).json(user).end();
             });
         });
