@@ -17,11 +17,18 @@ let dbAdaptor = {
             order: order,
             where: [ 'POST', 'PUT' ].includes(req.method) ? req.body : { }
         };
+    },
+    insert: (req) => {
+        let table = _.isNil(req.params.arguments) || req.params.arguments.length < 2 ? '' : req.params.arguments[1];
+        return {
+            table: table,
+            data: req.body
+        };
     }
 };
 
 const select = (req, res) => {
-    return dbService.select(dbAdaptor.select(req), { username: 'admin' })
+    return dbService.select(dbAdaptor.select(req), req.user)
     .then( (rows) => {
         res.status(200).json(rows).end();
     })
@@ -30,7 +37,17 @@ const select = (req, res) => {
     });
 };
 
+const insert = (req, res) => {
+    return dbService.insert(dbAdaptor.insert(req), req.user)
+    .then( (result) => {
+        res.status(200).json(result).end();
+    })
+    .catch( (error) => {
+        res.status(200).json({ status: 'fail' }).end();
+    });
+};
 
 module.exports = {
-    select: select
+    select: select,
+    insert: insert
 };

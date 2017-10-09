@@ -13,6 +13,9 @@ let tables = {
             password: (row, auth) => {
                 return auth.username == row['username'] ? row['password'] : '[REDACTED]';
             }
+        },
+        insert: (auth) => {
+            return !_.isNil(auth.username);
         }
     }
 };
@@ -41,7 +44,7 @@ const select = (query, auth) => {
     }
 
     let table = tables[query.table];
-    //fail silently on invalid table to prevent information disclosure to attackers
+
     if (_.isNil(table)) {
         return Q.fcall(() => { return []; });
     }
@@ -75,7 +78,35 @@ const select = (query, auth) => {
     });
 };
 
+const insert = (query, auth) => {
+    if (!_.isObject(auth)) {
+        auth = {
+            username: ''
+        };
+    }
+
+    let table = tables[query.table];
+
+    if (_.isNil(table) || !table.insert(auth)) {
+        return Q.fcall(() => { return { status: 'fail' }; });
+    }
+
+    return table.model.create(query.data)
+    .then( (row) => {
+        if (_.isNil(row)) {
+            return Q.fcall(() => { return { status: 'fail' }; });
+        }
+
+        return Object.assign({}, row, { status: 'success' });
+    })
+    .catch( (error) => {
+        console.log('[dbService.insert]', error);
+        return { status: 'fail' };
+    })
+};
+
 
 module.exports = {
-    select: select
+    select: select,
+    insert: insert
 };

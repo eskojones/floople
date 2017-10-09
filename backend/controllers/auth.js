@@ -12,19 +12,14 @@ const login = (req, res) => {
     }
 
     passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            res.status(200).json(user).end();
-            return;
-        }
-
-        if (!user) {
-            res.status(200).json(user).end();
+        if (err || !user) {
+            res.status(200).json({ status: 'error' }).end();
             return;
         }
 
         req.logIn(user, function (err) {
             if (err) {
-                res.status(200).json(user).end();
+                res.status(200).json({ status: 'error' }).end();
                 return;
             }
 

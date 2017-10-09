@@ -9,7 +9,11 @@ const style = {
     fontSize: 16,
     fontWeight: 600,
     background: '#aabbcc',
-    textAlign: 'left'
+    padding: 10,
+    textAlign: 'left',
+    border: 'solid',
+    borderWidth: 1,
+    borderColor: '#000000'
 };
 
 
