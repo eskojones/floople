@@ -14,7 +14,10 @@ let tables = {
                 return auth.username == row['username'] ? row['password'] : '[REDACTED]';
             }
         },
-        insert: (auth) => {
+        insert: (query, auth) => {
+            return !_.isNil(auth.username);
+        },
+        delete: (query, auth) => {
             return !_.isNil(auth.username);
         }
     }
@@ -86,7 +89,7 @@ const insert = (query, auth) => {
 
     let table = tables[query.table];
 
-    if (_.isNil(table) || !table.insert(auth)) {
+    if (_.isNil(table) || !table.insert(query, auth)) {
         return Q.fcall(() => { return { status: 'fail' }; });
     }
 
@@ -104,8 +107,31 @@ const insert = (query, auth) => {
     })
 };
 
+const _delete = (query, auth) => {
+    if (!_.isObject(auth)) {
+        auth = {
+            username: ''
+        };
+    }
+
+    let table = tables[query.table];
+
+    if (_.isNil(table) || _.isNil(query.where) || !table.delete(query, auth)) {
+        return Q.fcall(() => { return 0; });
+    }
+
+    return table.model.destroy({ where: query.where })
+    .then( (rowsAffected) => {
+        return rowsAffected;
+    })
+    .catch( (error) => {
+        console.log('[dbService.delete]', error);
+        return 0;
+    })
+};
 
 module.exports = {
     select: select,
-    insert: insert
+    insert: insert,
+    delete: _delete
 };

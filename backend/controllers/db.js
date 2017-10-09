@@ -20,10 +20,23 @@ let dbAdaptor = {
     },
     insert: (req) => {
         let table = _.isNil(req.params.arguments) || req.params.arguments.length < 2 ? '' : req.params.arguments[1];
-        return {
-            table: table,
-            data: req.body
-        };
+        if ([ 'POST', 'PUT' ].includes(req.method)) {
+            return {
+                table: table,
+                data: req.body
+            };
+        }
+        return { };
+    },
+    delete: (req) => {
+        let table = _.isNil(req.params.arguments) || req.params.arguments.length < 2 ? '' : req.params.arguments[1];
+        if ([ 'POST', 'PUT' ].includes(req.method)) {
+            return {
+                table: table,
+                where: req.body
+            };
+        }
+        return { };
     }
 };
 
@@ -47,7 +60,18 @@ const insert = (req, res) => {
     });
 };
 
+const _delete = (req, res) => {
+    return dbService.delete(dbAdaptor.delete(req), req.user)
+    .then( (rowsAffected) => {
+        res.status(200).json(rowsAffected).end();
+    })
+    .catch( (error) => {
+        res.status(200).json(0).end();
+    });
+};
+
 module.exports = {
     select: select,
-    insert: insert
+    insert: insert,
+    delete: _delete
 };
