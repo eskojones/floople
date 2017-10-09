@@ -9,7 +9,7 @@ let tables = {
     users: {
         model: models.User,
         attributes: [ 'username' ], //since we need username in the result in order to test access to password
-        access: {
+        select: {
             password: (row, auth) => {
                 return auth.username == row['username'] ? row['password'] : '[REDACTED]';
             }
@@ -24,11 +24,11 @@ const restrict = (query, rows, auth) => {
     let table = tables[query.table];
     let restricted = rows.slice();
 
-    Object.keys(table.access).forEach((column) => {
+    Object.keys(table.select).forEach((column) => {
         let idx = query.attributes.indexOf(column);
         if (idx > -1) {
             restricted.forEach( (row, idx) => {
-                restricted[idx][column] = table.access[column](row, auth);
+                restricted[idx][column] = table.select[column](row, auth);
             });
         }
     });
@@ -69,7 +69,6 @@ const select = (query, auth) => {
             return Q.fcall(() => { return []; });
         }
         
-        //apply access restrictions to the returned rows
         return restrict(query, rows, auth);
     })
     .catch( (error) => {
