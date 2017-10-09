@@ -2,6 +2,7 @@
 
 import Q from 'q';
 import $ from 'jquery';
+import _ from 'lodash';
 
 const apiEndpoint = '/api/db';
 
@@ -29,6 +30,28 @@ const select = ({ model='', attributes=[], order=[], where={} } = { }) => {
     .catch(handleResponseError);
 };
 
+const insert = ({ model='', data={} } = { }) => {
+    return Q($.ajax({
+        type: 'PUT',
+        url: `${apiEndpoint}/insert/${model}`,
+        dataType: 'json',
+        data: _.isObject(data) ? data : { }
+    }))
+    .catch(handleResponseError);
+};
+
+const _delete = ({ model='', where={} } = { }) => {
+    return Q($.ajax({
+        type: 'PUT',
+        url: `${apiEndpoint}/delete/${model}`,
+        dataType: 'json',
+        data: _.isObject(where) ? where : { }
+    }))
+    .catch(handleResponseError);
+};
+
 export default {
-    select: select
+    select: select,
+    insert: insert,
+    delete: _delete
 };
